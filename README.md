@@ -68,6 +68,8 @@ jobs:
    - All communication is outbound (HTTPS)
    - Jobs execute in isolated processes
    - Results report back to GitHub
+  
+![Architecture Diagram](https://raw.githubusercontent.com/Raihan-009/needs-custom-runner/refs/heads/main/custom-runner.png)
 
 2. **Security**
    - HTTPS communication only
