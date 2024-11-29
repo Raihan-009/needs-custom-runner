@@ -1,10 +1,30 @@
-name: Run on Custom Runner
+name: Deploy with Docker Compose
 
-on: push
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-  init:
+  deploy:
     runs-on: self-hosted
+    
     steps:
-      - run: echo 'Hello Hunny Bunny!'
-      - run: echo $HOSTNAME
+    - uses: actions/checkout@v4
+    
+    - name: Login to Docker Hub
+      run: |
+        echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+    
+    - name: Pull latest image
+      run: docker pull poridhi/nav-backend:v1.7
+    
+    - name: Stop existing containers
+      run: docker-compose down
+      continue-on-error: true
+    
+    - name: Deploy with docker-compose
+      run: |
+        docker-compose up -d
+      env:
+        IMAGE_TAG: v1.7
