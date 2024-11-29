@@ -1,4 +1,4 @@
-name: Deploy with Docker Compose
+name: Deploy with Docker Run
 
 on:
   push:
@@ -19,12 +19,15 @@ jobs:
     - name: Pull latest image
       run: docker pull poridhi/nav-backend:v1.7
     
-    - name: Stop existing containers
-      run: docker-compose down
+    - name: Stop existing container
+      run: |
+        docker stop nav-backend || true
+        docker rm nav-backend || true
       continue-on-error: true
     
-    - name: Deploy with docker-compose
+    - name: Deploy container
       run: |
-        docker-compose up -d
-      env:
-        IMAGE_TAG: v1.7
+        docker run -d \
+          --name nav-backend \
+          --restart always \
+          poridhi/nav-backend:v1.7
